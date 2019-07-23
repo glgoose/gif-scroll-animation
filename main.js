@@ -24,8 +24,11 @@ Apify.main(async () => {
 
   // get page height to determine when we scrolled to the bottom
   // initially used body height via boundingbox but this is not always equal to document height
-  const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)
-  const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
+  const documentElement = await page.evaluateHandle(() => document.documentElement)
+  const pageHeight = documentElement.scrollHeight
+  const scrollTop = documentElement.scrollTop
+  await documentElement.dispose()
+  
   const viewport = {
     width: page.viewport()['width'],
     height: page.viewport()['height']

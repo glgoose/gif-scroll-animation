@@ -45,7 +45,7 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
 const lossyCompression = async (gifFileName) => {
     log.info('Optimizing gif')
     await imagemin([gifFileName], {
-        destination: 'optimized', 
+        destination: `${gifFileName}_lossy-comp`, 
         plugins: [
             imageminGiflossy({ 
                 lossy: 80,
