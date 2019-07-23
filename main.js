@@ -1,5 +1,5 @@
 const Apify = require('apify')
-const { log } = Apify.utils
+const { log, puppeteer } = Apify.utils
 const { takeScreenshot, gifAddFrame } = require('./helper')
 const gifEncoder = require('gif-encoder')
 const fs = require('fs')
@@ -22,12 +22,13 @@ Apify.main(async () => {
   log.info(`Opening page: ${input.url}`)
   await page.goto(input.url, { waitUntil: 'networkidle2' })
 
-  //scrolling
-  const bodyHandle = await page.$('body');
-  const { height: pageHeight } = await bodyHandle.boundingBox();  // get page height
-  await bodyHandle.dispose();
-
-  let scrolledUntil = input.viewport.height   // starting height is viewport height
+  // get page height to determine when we scrolled to the bottom
+  // initially used body height via boundingbox but this is not always equal to document height
+  // Inject jQuery into a page
+  const pageHeight = await page.evaluate(() => document.body.scrollHeight)
+  const scrollTop = await page.evaluate(() => document.body.getBoundingClientRect()['top'])
+  
+  let scrolledUntil = input.viewport.height - scrollTop   //set initial position the window/viewport is at
   const amountToScroll = Math.round(input.viewport.height * input.scrollPercentage)
 
   // create base gif file to write to
