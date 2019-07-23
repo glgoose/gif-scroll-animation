@@ -35,7 +35,7 @@ Apify.main(async () => {
   //   contentType: 'image/gif',
   // })
 
-  const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/)
+  const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
 
   let gif = new gifEncoder(input.viewport.width, input.viewport.height)
 
@@ -43,8 +43,8 @@ Apify.main(async () => {
   gif.pipe(fs.createWriteStream(`${siteName}-scroll.gif`))
   gif.writeHeader()
 
-  // wait 5 sec to make sure page is fully loaded
-  const waitTime = 5000
+  // wait 3 sec to make sure page is fully loaded
+  const waitTime = 3000
   log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
   await new Promise (resolve => setTimeout(resolve, waitTime))
 
