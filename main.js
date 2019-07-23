@@ -39,7 +39,7 @@ Apify.main(async () => {
 
   let gif = new gifEncoder(input.viewport.width, input.viewport.height)
 
-  gif.setFrameRate(7)
+  gif.setFrameRate(iput.frameRate)
   gif.pipe(fs.createWriteStream(`${siteName}-scroll.gif`))
   gif.writeHeader()
 
