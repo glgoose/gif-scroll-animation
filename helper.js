@@ -29,16 +29,10 @@ const parsePngBuffer = (buffer) => {
     })
 }
 
-// const decodePng = (buffer) => {
-//     let png = new PNG2(buffer)
-//     return new Promise(resolve => png.decode(pixels => resolve(pixels)))
-// }
-
 const gifAddFrame = async (screenshotBuffer, gif) => {
     try {
         const png = await parsePngBuffer(screenshotBuffer)
         const pixels = png.data
-        // const pixels = await decodePng(screenshotBuffer)
 
         log.debug('Adding frame to gif')
         gif.addFrame(pixels)

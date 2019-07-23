@@ -24,11 +24,15 @@ Apify.main(async () => {
 
   // get page height to determine when we scrolled to the bottom
   // initially used body height via boundingbox but this is not always equal to document height
-  const pageHeight = await page.evaluate(() => document.body.scrollHeight)
-  const scrollTop = await page.evaluate(() => document.body.getBoundingClientRect()['top'])
+  const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+  const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
+  const viewport = {
+    width: page.viewport()['width'],
+    height: page.viewport()['height']
+  }
 
-  let scrolledUntil = input.viewport.height - scrollTop   //set initial position the window/viewport is at
-  const amountToScroll = Math.round(input.viewport.height * input.scrollPercentage)
+  let scrolledUntil = viewport.width + scrollTop   //set initial position the window/viewport is at
+  const amountToScroll = Math.round(viewport.height * input.scrollPercentage)
 
   // create base gif file to write to
   // let gif = await keyValueStore.setValue('scroll.gif', buffer, {
@@ -37,7 +41,7 @@ Apify.main(async () => {
 
   const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
 
-  let gif = new gifEncoder(input.viewport.width, input.viewport.height)
+  let gif = new gifEncoder(viewport.width, viewport.height)
   const gifFileName = `${siteName}-scroll.gif`
 
   gif.setFrameRate(input.frameRate)
