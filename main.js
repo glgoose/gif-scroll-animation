@@ -1,6 +1,6 @@
 const Apify = require('apify')
 const { log, puppeteer } = Apify.utils
-const { takeScreenshot, gifAddFrame } = require('./helper')
+const { takeScreenshot, gifAddFrame, lossyCompression } = require('./helper')
 const gifEncoder = require('gif-encoder')
 const fs = require('fs')
 
@@ -24,10 +24,9 @@ Apify.main(async () => {
 
   // get page height to determine when we scrolled to the bottom
   // initially used body height via boundingbox but this is not always equal to document height
-  // Inject jQuery into a page
   const pageHeight = await page.evaluate(() => document.body.scrollHeight)
   const scrollTop = await page.evaluate(() => document.body.getBoundingClientRect()['top'])
-  
+
   let scrolledUntil = input.viewport.height - scrollTop   //set initial position the window/viewport is at
   const amountToScroll = Math.round(input.viewport.height * input.scrollPercentage)
 
@@ -39,15 +38,16 @@ Apify.main(async () => {
   const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
 
   let gif = new gifEncoder(input.viewport.width, input.viewport.height)
+  const gifFileName = `${siteName}-scroll.gif`
 
   gif.setFrameRate(input.frameRate)
-  gif.pipe(fs.createWriteStream(`${siteName}-scroll.gif`))
+  gif.pipe(fs.createWriteStream(gifFileName))
   gif.writeHeader()
 
   // wait 3 sec to make sure page is fully loaded
   const waitTime = 3000
   log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
-  await new Promise (resolve => setTimeout(resolve, waitTime))
+  await new Promise(resolve => setTimeout(resolve, waitTime))
 
   // click cookie pop-up away
   log.info('Clicking cookie pop-up away')
@@ -67,7 +67,7 @@ Apify.main(async () => {
     const screenshotBuffer = await takeScreenshot(page, input)
 
     await gifAddFrame(screenshotBuffer, gif)
-    
+
     log.info(`Scrolling down by ${amountToScroll} pixels`)
     await page.evaluate(amountToScroll => {
       window.scrollBy(0, amountToScroll);
@@ -78,18 +78,5 @@ Apify.main(async () => {
 
   gif.finish()
 
-  // //gif part
-  // const gif = new GIFEncoder(input.viewport.width, input.viewport.height)
-
-  // // Setup gif gif parameters
-  // gif.setFrameRate(60)  // Set delay based on amount of frames per second. Cannot be used with gif.setDelay
-  // gif.setRepeat(0)  //Sets amount of times to repeat GIF. 0 -> loop indefinitely
-  // // gif.pipe(file)
+  await lossyCompression(gifFileName)
 });
-
-// GIF framerate
-// GIF duration
-// Delay before recording
-// Element to click -> clickSelector
-// Screen Dimensions -> viewport
-// Desired Output resolution 

@@ -1,8 +1,8 @@
 const Apify = require('apify')
 const { log } = Apify.utils
 const PNG = require('pngjs').PNG
-const gifEncoder = require('gifencoder')
-// const GIFEncoder = require('gif-encoder')
+const imagemin = require('imagemin');
+const imageminGiflossy = require('imagemin-giflossy')
 
 const takeScreenshot = async (page, { fullPage = false, omitBackground = false }) => {
     log.info('Taking screenshot')
@@ -37,7 +37,7 @@ const parsePngBuffer = (buffer) => {
 const gifAddFrame = async (screenshotBuffer, gif) => {
     try {
         const png = await parsePngBuffer(screenshotBuffer)
-        const pixels =  png.data
+        const pixels = png.data
         // const pixels = await decodePng(screenshotBuffer)
 
         log.debug('Adding frame to gif')
@@ -48,7 +48,21 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
     }
 }
 
+const lossyCompression = async (gifFileName) => {
+    log.info('Optimizing gif')
+    await imagemin([gifFileName], {
+        destination: 'optimized', 
+        plugins: [
+            imageminGiflossy({ 
+                lossy: 80,
+                optimizationLevel: 3
+            })
+        ] 
+    })
+}
+
 module.exports = {
     takeScreenshot,
-    gifAddFrame
+    gifAddFrame,
+    lossyCompression
 }

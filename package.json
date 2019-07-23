@@ -4,10 +4,9 @@
 	"description": "Record a page scroll or click and turn it into an animated gif.",
 	"dependencies": {
 		"apify": "^0.14.10",
-		"get-pixels": "^3.3.2",
 		"gif-encoder": "^0.7.2",
-		"gifencoder": "^2.0.1",
-		"png-js": "^0.1.1",
+		"imagemin": "^7.0.0",
+		"imagemin-giflossy": "^5.1.10",
 		"pngjs": "^3.4.0"
 	},
 	"devDependencies": {},
