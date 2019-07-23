@@ -1,18 +1,15 @@
 const Apify = require('apify')
 const { log } = Apify.utils
 const { takeScreenshot, gifAddFrame } = require('./helper')
-// const gifEncoder = require('gif-encoder')
-const gifEncoder = require('gifencoder')
+const gifEncoder = require('gif-encoder')
 const fs = require('fs')
-// const getPixels = require('get-pixels')
 
 Apify.main(async () => {
   const input = await Apify.getInput();
   const keyValueStore = await Apify.openKeyValueStore()
 
   const browser = await Apify.launchPuppeteer({
-    useChrome: true,
-    stealth: true
+    useChrome: false
   })
   const page = await browser.newPage()
 
@@ -30,7 +27,7 @@ Apify.main(async () => {
   const { height: pageHeight } = await bodyHandle.boundingBox();  // get page height
   await bodyHandle.dispose();
 
-  let scrolledUntil = input.viewport.height   // staring height is viewport height
+  let scrolledUntil = input.viewport.height   // starting height is viewport height
   const amountToScroll = Math.round(input.viewport.height * input.scrollPercentage)
 
   // create base gif file to write to
@@ -38,25 +35,23 @@ Apify.main(async () => {
   //   contentType: 'image/gif',
   // })
 
-  // let file = require('fs').createWriteStream('scroll.gif')
-  // let gif = gifEncoder(input.viewport.width, input.viewport.height)
+  let gif = new gifEncoder(input.viewport.width, input.viewport.height)
 
-  // gif.setFrameRate(60)
-  // gif.pipe(file)
-  // gif.writeHeader()
+  gif.setFrameRate(7)
+  gif.pipe(fs.createWriteStream('scroll.gif'))
+  gif.writeHeader()
 
-  /* gifencoder part */
-  const gif = new gifEncoder(input.viewport.width, input.viewport.height)
-  gif.createWriteStream()
-    .pipe(fs.createWriteStream('scroll.gif'))
-
-  gif.start();
-  gif.setRepeat(0);   // 0 for repeat, -1 for no-repeat
-  gif.setDelay(150);  // frame delay in ms
-  gif.setQuality(10); // image quality. 10 is default
+  // wait 5 sec to make sure page is fully loaded
+  const waitTime = 5000
+  log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
+  await new Promise (resolve => setTimeout(resolve, waitTime))
 
   // click cookie pop-up away
-  await page.click('[class*="cookie"] button')
+  log.info('Clicking cookie pop-up away')
+  if (input.cookieAcceptSelector) {
+    await page.waitForSelector(input.cookieAcceptSelector)
+    await page.click(input.cookieAcceptSelector)
+  }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
   for (itt = 0; itt < input.beginDelay; itt++) {
