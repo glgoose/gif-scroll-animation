@@ -1,15 +1,20 @@
 {
 	"name": "scroll-click-gif",
 	"version": "0.0.1",
-	"description": "This is a boilerplate of an Apify actor.",
+	"description": "Record a page scroll or click and turn it into an animated gif.",
 	"dependencies": {
-		"apify": "^0.14.10"
+		"apify": "^0.14.10",
+		"get-pixels": "^3.3.2",
+		"gif-encoder": "^0.7.2",
+		"gifencoder": "^2.0.1",
+		"png-js": "^0.1.1",
+		"pngjs": "^3.4.0"
 	},
 	"devDependencies": {},
 	"scripts": {
 		"start": "node main.js",
 		"test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
 	},
-	"author": "It's not you it's me",
+	"author": "Glenn",
 	"license": "ISC"
 }

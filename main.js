@@ -1,55 +1,97 @@
-// This is the main Node.js source code file of your actor.
-// It is referenced from the "scripts" section of the package.json file,
-// so that it can be started by running "npm start".
-
-// Include Apify SDK. For more information, see https://sdk.apify.com/
-const Apify = require('apify');
+const Apify = require('apify')
+const { log } = Apify.utils
+const { takeScreenshot, gifAddFrame } = require('./helper')
+// const gifEncoder = require('gif-encoder')
+const gifEncoder = require('gifencoder')
+const fs = require('fs')
+// const getPixels = require('get-pixels')
 
 Apify.main(async () => {
-    // Get input of the actor (here only for demonstration purposes).
-    // If you'd like to have your input checked and have Apify display
-    // a user interface for it, add INPUT_SCHEMA.json file to your actor.
-    // For more information, see https://apify.com/docs/actor/input-schema
-    const input = await Apify.getInput();
-    console.log('Input:');
-    console.dir(input);
+  const input = await Apify.getInput();
+  const keyValueStore = await Apify.openKeyValueStore()
 
-    // Open a request queue and add a start URL to it
-    const requestQueue = await Apify.openRequestQueue();
-    await requestQueue.addRequest({ url: 'https://www.iana.org/' });
+  const browser = await Apify.launchPuppeteer({
+    useChrome: true,
+    stealth: true
+  })
+  const page = await browser.newPage()
 
-    // Define a pattern of URLs that the crawler should visit
-    const pseudoUrls = [new Apify.PseudoUrl('https://www.iana.org/[.*]')];
+  log.info(`Setting page viewport to ${input.viewport.width}x${input.viewport.height}`)
+  await page.setViewport({
+    width: input.viewport.width,
+    height: input.viewport.height
+  })
 
-    // Create a crawler that will use headless Chrome / Puppeteer to extract data
-    // from pages and recursively add links to newly-found pages
-    const crawler = new Apify.PuppeteerCrawler({
-        requestQueue,
+  log.info(`Opening page: ${input.url}`)
+  await page.goto(input.url, { waitUntil: 'networkidle2' })
 
-        // This function is called for every page the crawler visits
-        handlePageFunction: async ({ request, page }) => {
-            const title = await page.title();
-            console.log(`Title of ${request.url}: ${title}`);
-            await Apify.pushData({
-                title,
-                '#debug': Apify.utils.createRequestDebugInfo(request),
-            });
-            await Apify.utils.enqueueLinks({ page, selector: 'a', pseudoUrls, requestQueue });
-        },
+  //scrolling
+  const bodyHandle = await page.$('body');
+  const { height: pageHeight } = await bodyHandle.boundingBox();  // get page height
+  await bodyHandle.dispose();
 
-        // This function is called for every page the crawler failed to load
-        // or for which the handlePageFunction() throws at least "maxRequestRetries"-times
-        handleFailedRequestFunction: async ({ request }) => {
-            console.log(`Request ${request.url} failed too many times`);
-            await Apify.pushData({
-                '#debug': Apify.utils.createRequestDebugInfo(request),
-            });
-        },
+  let scrolledUntil = input.viewport.height   // staring height is viewport height
+  const amountToScroll = Math.round(input.viewport.height * input.scrollPercentage)
 
-        maxRequestRetries: 2,
-        maxRequestsPerCrawl: 100,
-        maxConcurrency: 10,
-    });
+  // create base gif file to write to
+  // let gif = await keyValueStore.setValue('scroll.gif', buffer, {
+  //   contentType: 'image/gif',
+  // })
 
-    await crawler.run();
+  // let file = require('fs').createWriteStream('scroll.gif')
+  // let gif = gifEncoder(input.viewport.width, input.viewport.height)
+
+  // gif.setFrameRate(60)
+  // gif.pipe(file)
+  // gif.writeHeader()
+
+  /* gifencoder part */
+  const gif = new gifEncoder(input.viewport.width, input.viewport.height)
+  gif.createWriteStream()
+    .pipe(fs.createWriteStream('scroll.gif'))
+
+  gif.start();
+  gif.setRepeat(0);   // 0 for repeat, -1 for no-repeat
+  gif.setDelay(150);  // frame delay in ms
+  gif.setQuality(10); // image quality. 10 is default
+
+  // click cookie pop-up away
+  await page.click('[class*="cookie"] button')
+
+  // add first frame multiple times so there is some delay before gif starts visually scrolling
+  for (itt = 0; itt < input.beginDelay; itt++) {
+    const initialScreenshotBuffer = await takeScreenshot(page, input)  // take screenshot each time so animations also show well
+    await gifAddFrame(initialScreenshotBuffer, gif)
+  }
+
+  // scroll down
+  while (pageHeight > scrolledUntil) {
+    const screenshotBuffer = await takeScreenshot(page, input)
+
+    await gifAddFrame(screenshotBuffer, gif)
+    
+    log.info(`Scrolling down by ${amountToScroll} pixels`)
+    await page.evaluate(amountToScroll => {
+      window.scrollBy(0, amountToScroll);
+    }, amountToScroll);
+
+    scrolledUntil += amountToScroll
+  }
+
+  gif.finish()
+
+  // //gif part
+  // const gif = new GIFEncoder(input.viewport.width, input.viewport.height)
+
+  // // Setup gif gif parameters
+  // gif.setFrameRate(60)  // Set delay based on amount of frames per second. Cannot be used with gif.setDelay
+  // gif.setRepeat(0)  //Sets amount of times to repeat GIF. 0 -> loop indefinitely
+  // // gif.pipe(file)
 });
+
+// GIF framerate
+// GIF duration
+// Delay before recording
+// Element to click -> clickSelector
+// Screen Dimensions -> viewport
+// Desired Output resolution 

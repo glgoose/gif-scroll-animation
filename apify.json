@@ -2,6 +2,5 @@
 	"name": "scroll-click-gif",
 	"version": "0.0",
 	"buildTag": "latest",
-	"env": null,
-	"template": "puppeteer_crawler"
+	"env": null
 }
