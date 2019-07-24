@@ -1,5 +1,5 @@
 const Apify = require('apify')
-const { log, puppeteer } = Apify.utils
+const { log } = Apify.utils
 const GifEncoder = require('gif-encoder')
 const { 
   takeScreenshot, 
@@ -11,8 +11,7 @@ const {
 
 
 Apify.main(async () => {
-  const input = await Apify.getInput();
-  const keyValueStore = await Apify.openKeyValueStore()
+  const input = await Apify.getInput()
 
   const browser = await Apify.launchPuppeteer({
     useChrome: false
@@ -28,7 +27,7 @@ Apify.main(async () => {
   // slow down animations so they can be captured with screenshots
   const session = await page.target().createCDPSession();
   await session.send('Animation.enable');
-  const playBackRate = await session.send('Animation.getPlaybackRate')
+  await session.send('Animation.getPlaybackRate')
   await session.send('Animation.setPlaybackRate', {
     playbackRate: 0.1,
   });
@@ -48,11 +47,6 @@ Apify.main(async () => {
 
   let scrolledUntil = viewport.height + scrollTop   //set initial position the window/viewport is at
   const scrollByAmount = Math.round(viewport.height * input.scrollPercentage)
-
-  // create base gif file to write to
-  // let gif = await keyValueStore.setValue('scroll.gif', buffer, {
-  //   contentType: 'image/gif',
-  // })
 
   const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
 

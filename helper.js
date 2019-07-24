@@ -64,6 +64,7 @@ const lossyCompression = async (buffer) => {
 }
 
 const saveGif = async (fileName, buffer) => {
+    const keyValueStore = await Apify.openKeyValueStore()
     await keyValueStore.setValue(fileName, buffer, {
       contentType: 'image/gif'
     })
