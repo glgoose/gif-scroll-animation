@@ -1,8 +1,14 @@
 const Apify = require('apify')
 const { log, puppeteer } = Apify.utils
-const { takeScreenshot, gifAddFrame, lossyCompression } = require('./helper')
-const gifEncoder = require('gif-encoder')
-const fs = require('fs')
+const GifEncoder = require('gif-encoder')
+const { 
+  takeScreenshot, 
+  gifAddFrame, 
+  getGifBuffer,
+  lossyCompression,
+  saveGif
+ } = require('./helper')
+
 
 Apify.main(async () => {
   const input = await Apify.getInput();
@@ -19,23 +25,29 @@ Apify.main(async () => {
     height: input.viewport.height
   })
 
+  // slow down animations so they can be captured with screenshots
+  const session = await page.target().createCDPSession();
+  await session.send('Animation.enable');
+  const playBackRate = await session.send('Animation.getPlaybackRate')
+  await session.send('Animation.setPlaybackRate', {
+    playbackRate: 0.1,
+  });
+
   log.info(`Opening page: ${input.url}`)
   await page.goto(input.url, { waitUntil: 'networkidle2' })
 
   // get page height to determine when we scrolled to the bottom
   // initially used body height via boundingbox but this is not always equal to document height
-  const documentElement = await page.evaluateHandle(() => document.documentElement)
-  const pageHeight = documentElement.scrollHeight
-  const scrollTop = documentElement.scrollTop
-  await documentElement.dispose()
-  
+  const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+  const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
+
   const viewport = {
-    width: page.viewport()['width'],
-    height: page.viewport()['height']
+    width: page.viewport().width,
+    height: page.viewport().height
   }
 
-  let scrolledUntil = viewport.width + scrollTop   //set initial position the window/viewport is at
-  const amountToScroll = Math.round(viewport.height * input.scrollPercentage)
+  let scrolledUntil = viewport.height + scrollTop   //set initial position the window/viewport is at
+  const scrollByAmount = Math.round(viewport.height * input.scrollPercentage)
 
   // create base gif file to write to
   // let gif = await keyValueStore.setValue('scroll.gif', buffer, {
@@ -44,11 +56,13 @@ Apify.main(async () => {
 
   const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
 
-  let gif = new gifEncoder(viewport.width, viewport.height)
-  const gifFileName = `${siteName}-scroll.gif`
+  let gif = new GifEncoder(viewport.width, viewport.height)
+  const gifFileName = `${siteName}-scroll`
 
   gif.setFrameRate(input.frameRate)
-  gif.pipe(fs.createWriteStream(gifFileName))
+
+  let chunks = []
+  gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
   // wait 3 sec to make sure page is fully loaded
@@ -69,21 +83,27 @@ Apify.main(async () => {
     await gifAddFrame(initialScreenshotBuffer, gif)
   }
 
-  // scroll down
+  // start scrolling down
   while (pageHeight > scrolledUntil) {
     const screenshotBuffer = await takeScreenshot(page, input)
 
     await gifAddFrame(screenshotBuffer, gif)
 
-    log.info(`Scrolling down by ${amountToScroll} pixels`)
-    await page.evaluate(amountToScroll => {
-      window.scrollBy(0, amountToScroll);
-    }, amountToScroll);
+    log.info(`Scrolling down by ${scrollByAmount} pixels`)
+    await page.evaluate(scrollByAmount => {
+      window.scrollBy(0, scrollByAmount);
+    }, scrollByAmount);
 
-    scrolledUntil += amountToScroll
+    scrolledUntil += scrollByAmount
   }
-
+  browser.close()
+  
   gif.finish()
+  const gifBuffer = await getGifBuffer()
+  const lossyBuffer = await lossyCompression(gifBuffer)
 
-  await lossyCompression(gifFileName)
-});
+  await saveGif(`${gifFileName}.gif`, gifBuffer)
+  await saveGif(`${gifFileName}_lossy-comp.gif`, lossyBuffer)
+
+  log.info('Actor finished')
+})

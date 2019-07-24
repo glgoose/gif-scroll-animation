@@ -42,10 +42,16 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
     }
 }
 
-const lossyCompression = async (gifFileName) => {
-    log.info('Optimizing gif')
-    await imagemin([gifFileName], {
-        destination: `${gifFileName}_lossy-comp`, 
+const getGifBuffer = () => {
+    return new Promise((resolve, reject) => {
+      gif.on('end', () => resolve(Buffer.concat(chunks)))
+      gif.on('error', (error) => reject(error))
+    })
+}
+
+const lossyCompression = async (buffer) => {
+    log.info('Lossy compression of gif')
+    const lossyBuffer = await imagemin.buffer(buffer, { 
         plugins: [
             imageminGiflossy({ 
                 lossy: 80,
@@ -53,10 +59,20 @@ const lossyCompression = async (gifFileName) => {
             })
         ] 
     })
+    log.info('Lossy compression finished')
+    return lossyBuffer
 }
+
+const saveGif = async (fileName, buffer) => {
+    await keyValueStore.setValue(fileName, buffer, {
+      contentType: 'image/gif'
+    })
+  }
 
 module.exports = {
     takeScreenshot,
     gifAddFrame,
-    lossyCompression
+    getGifBuffer,
+    lossyCompression,
+    saveGif
 }
