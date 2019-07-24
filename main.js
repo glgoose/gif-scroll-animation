@@ -65,8 +65,8 @@ Apify.main(async () => {
   await new Promise(resolve => setTimeout(resolve, waitTime))
 
   // click cookie pop-up away
-  log.info('Clicking cookie pop-up away')
   if (input.cookieAcceptSelector) {
+    log.info('Clicking cookie pop-up away')
     await page.waitForSelector(input.cookieAcceptSelector)
     await page.click(input.cookieAcceptSelector)
   }
