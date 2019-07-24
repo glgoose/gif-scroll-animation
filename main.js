@@ -93,7 +93,7 @@ Apify.main(async () => {
   browser.close()
   
   gif.finish()
-  const gifBuffer = await getGifBuffer()
+  const gifBuffer = await getGifBuffer(gif)
   const lossyBuffer = await lossyCompression(gifBuffer)
 
   await saveGif(`${gifFileName}.gif`, gifBuffer)
