@@ -42,7 +42,7 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
     }
 }
 
-const getGifBuffer = (gif) => {
+const getGifBuffer = (gif, chunks) => {
     return new Promise((resolve, reject) => {
       gif.on('end', () => resolve(Buffer.concat(chunks)))
       gif.on('error', (error) => reject(error))

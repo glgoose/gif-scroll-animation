@@ -78,7 +78,7 @@ Apify.main(async () => {
   while (pageHeight > scrolledUntil) {
     const screenshotBuffer = await takeScreenshot(page, input)
 
-    await gifAddFrame(screenshotBuffer, gif)
+    gifAddFrame(screenshotBuffer, gif)
 
     log.info(`Scrolling down by ${scrollByAmount} pixels`)
     await page.evaluate(scrollByAmount => {
@@ -90,7 +90,7 @@ Apify.main(async () => {
   browser.close()
   
   gif.finish()
-  const gifBuffer = await getGifBuffer(gif)
+  const gifBuffer = await getGifBuffer(gif, chunks)
   const lossyBuffer = await lossyCompression(gifBuffer)
 
   await saveGif(`${gifFileName}.gif`, gifBuffer)
