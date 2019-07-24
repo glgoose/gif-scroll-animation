@@ -6,7 +6,8 @@ const {
   gifAddFrame, 
   getGifBuffer,
   lossyCompression,
-  saveGif
+  saveGif,
+  slowDownAnimations
  } = require('./helper')
 
 
@@ -24,13 +25,9 @@ Apify.main(async () => {
     height: input.viewport.height
   })
 
-  // slow down animations so they can be captured with screenshots
-  const session = await page.target().createCDPSession();
-  await session.send('Animation.enable');
-  await session.send('Animation.getPlaybackRate')
-  await session.send('Animation.setPlaybackRate', {
-    playbackRate: 0.1,
-  });
+  if (input.slowDownAnimations) {
+    slowDownAnimations(page)
+  }
 
   log.info(`Opening page: ${input.url}`)
   await page.goto(input.url, { waitUntil: 'networkidle2' })

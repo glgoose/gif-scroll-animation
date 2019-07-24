@@ -70,10 +70,21 @@ const saveGif = async (fileName, buffer) => {
     })
   }
 
+const slowDownAnimations = async (page) => {
+    // slow down animations so they can be captured with screenshots
+  const session = await page.target().createCDPSession();
+  await session.send('Animation.enable');
+  await session.send('Animation.getPlaybackRate')
+  await session.send('Animation.setPlaybackRate', {
+    playbackRate: 0.1,
+  })
+}
+
 module.exports = {
     takeScreenshot,
     gifAddFrame,
     getGifBuffer,
     lossyCompression,
-    saveGif
+    saveGif,
+    slowDownAnimations
 }
