@@ -54,7 +54,7 @@ Apify.main(async () => {
   }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
-  for (itt = 0; itt < input.beginDelay; itt++) {
+  for (itt = 0; itt < input.framesBeforeScrolling; itt++) {
     const screenshotBuffer = await takeScreenshot(page, input)  // take screenshot each time so animations also show well
     await gifAddFrame(screenshotBuffer, gif)
   }
