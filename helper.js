@@ -30,16 +30,11 @@ const parsePngBuffer = (buffer) => {
 }
 
 const gifAddFrame = async (screenshotBuffer, gif) => {
-    try {
-        const png = await parsePngBuffer(screenshotBuffer)
-        const pixels = png.data
+    const png = await parsePngBuffer(screenshotBuffer)
+    const pixels = png.data
 
-        log.debug('Adding frame to gif')
-        gif.addFrame(pixels)
-    }
-    catch (error) {
-        log.error(error)
-    }
+    log.debug('Adding frame to gif')
+    gif.addFrame(pixels)
 }
 
 const getScrollParameters = async (page, input) => {
