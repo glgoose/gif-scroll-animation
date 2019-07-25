@@ -3,6 +3,7 @@ const { log } = Apify.utils
 const PNG = require('pngjs').PNG
 const imagemin = require('imagemin');
 const imageminGiflossy = require('imagemin-giflossy')
+const imageminGifsicle = require('imagemin-gifsicle')
 
 const takeScreenshot = async (page, { fullPage = false, omitBackground = false }) => {
     log.info('Taking screenshot')
@@ -77,17 +78,30 @@ const getGifBuffer = (gif, chunks) => {
     })
 }
 
-const lossyCompression = async (buffer) => {
-    log.info('Compressing gif (lossy)')
-    const lossyBuffer = await imagemin.buffer(buffer, {
-        plugins: [
-            imageminGiflossy({
-                lossy: 80,
-                optimizationLevel: 3
-            })
-        ]
+const selectPlugin = (compressionType) => {
+    switch (compressionType) {
+        case 'lossy':
+            return [
+                imageminGiflossy({
+                    lossy: 80,
+                    optimizationLevel: 3
+                })
+            ]
+        case 'losless':
+            return [
+                imageminGifsicle({
+                    optimizationLevel: 3
+                })
+            ]
+    }
+}
+
+const compressGif = async (gifBuffer, compressionType) => {
+    log.info('Compressing gif')
+    const compressedBuffer = await imagemin.buffer(gifBuffer, {
+        plugins: selectPlugin(compressionType)
     })
-    return lossyBuffer
+    return compressedBuffer
 }
 
 const saveGif = async (fileName, buffer) => {
@@ -117,7 +131,7 @@ module.exports = {
     gifAddFrame,
     scrollDownProcess,
     getGifBuffer,
-    lossyCompression,
+    compressGif,
     saveGif,
     slowDownAnimations
 }

@@ -6,7 +6,7 @@ const {
   gifAddFrame,
   scrollDownProcess,
   getGifBuffer,
-  lossyCompression,
+  compressGif,
   saveGif,
   slowDownAnimations
 } = require('./helper')
@@ -70,15 +70,19 @@ Apify.main(async () => {
   const baseFileName = `${siteName}-scroll`
 
   try {
-    const orignialGifSaved = saveGif(`${baseFileName}_original.gif`, gifBuffer)
+    const orignialGifSaved = saveGif(`${baseFileName}_original`, gifBuffer)
 
-    const lossyBuffer = await lossyCompression(gifBuffer)
+    const loslessBuffer = await compressGif(gifBuffer, 'losless')
+    log.info('Losless compression finished')
+    const loslessGifSaved = await saveGif(`${baseFileName}_losless-comp`, loslessBuffer)
+
+    const lossyBuffer = await compressGif(gifBuffer, 'lossy')
     log.info('Lossy compression finished')
-
-    const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp.gif`, lossyBuffer)
+    const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp`, lossyBuffer)
 
     await Promise.all([
       orignialGifSaved,
+      loslessGifSaved,
       lossyGifSaved
     ])
   } catch (error) {
