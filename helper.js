@@ -42,47 +42,85 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
     }
 }
 
+const getScrollParameters = async (page, input) => {
+    // get page height to determine when we scrolled to the bottom
+    const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)  // initially used body element height via .boundingbox() but this is not always equal to document height
+    const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
+
+    const initialPosition = input.viewport.height + scrollTop
+    const scrollByAmount = Math.round(input.viewport.height * input.scrollPercentage)
+
+    return {
+        pageHeight,
+        initialPosition,
+        scrollByAmount
+    }
+}
+
+const scrollDownProcess = async (page, gif, input) => {
+    const { pageHeight, initialPosition, scrollByAmount } = await getScrollParameters(page, input)
+    let scrolledUntil = initialPosition
+
+    while (pageHeight > scrolledUntil) {
+        const screenshotBuffer = await takeScreenshot(page, input)
+
+        gifAddFrame(screenshotBuffer, gif)
+
+        log.info(`Scrolling down by ${scrollByAmount} pixels`)
+        await page.evaluate(scrollByAmount => {
+            window.scrollBy(0, scrollByAmount)
+        }, scrollByAmount)
+
+        scrolledUntil += scrollByAmount
+    }
+}
+
 const getGifBuffer = (gif, chunks) => {
     return new Promise((resolve, reject) => {
-      gif.on('end', () => resolve(Buffer.concat(chunks)))
-      gif.on('error', (error) => reject(error))
+        gif.on('end', () => resolve(Buffer.concat(chunks)))
+        gif.on('error', (error) => reject(error))
     })
 }
 
 const lossyCompression = async (buffer) => {
-    log.info('Lossy compression of gif')
-    const lossyBuffer = await imagemin.buffer(buffer, { 
+    log.info('Compressing gif (lossy)')
+    const lossyBuffer = await imagemin.buffer(buffer, {
         plugins: [
-            imageminGiflossy({ 
+            imageminGiflossy({
                 lossy: 80,
                 optimizationLevel: 3
             })
-        ] 
+        ]
     })
-    log.info('Lossy compression finished')
     return lossyBuffer
 }
 
 const saveGif = async (fileName, buffer) => {
+    log.info(`Saving ${fileName} to key-value store`)
     const keyValueStore = await Apify.openKeyValueStore()
-    await keyValueStore.setValue(fileName, buffer, {
-      contentType: 'image/gif'
+    const gifSaved = await keyValueStore.setValue(fileName, buffer, {
+        contentType: 'image/gif'
     })
-  }
+    return gifSaved
+}
 
 const slowDownAnimations = async (page) => {
-    // slow down animations so they can be captured with screenshots
-  const session = await page.target().createCDPSession();
-  await session.send('Animation.enable');
-  await session.send('Animation.getPlaybackRate')
-  await session.send('Animation.setPlaybackRate', {
-    playbackRate: 0.1,
-  })
+    log.info('Slowing down animations')
+
+    const session = await page.target().createCDPSession()
+
+    return await Promise.all([
+        session.send('Animation.enable'),
+        session.send('Animation.setPlaybackRate', {
+            playbackRate: 0.1,
+        })
+    ])
 }
 
 module.exports = {
     takeScreenshot,
     gifAddFrame,
+    scrollDownProcess,
     getGifBuffer,
     lossyCompression,
     saveGif,
