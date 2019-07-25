@@ -1,15 +1,15 @@
 const Apify = require('apify')
 const { log } = Apify.utils
 const GifEncoder = require('gif-encoder')
-const { 
-  takeScreenshot, 
-  gifAddFrame, 
+const {
+  takeScreenshot,
+  gifAddFrame,
   scrollDownProcess,
   getGifBuffer,
   lossyCompression,
   saveGif,
   slowDownAnimations
- } = require('./helper')
+} = require('./helper')
 
 
 Apify.main(async () => {
@@ -41,10 +41,10 @@ Apify.main(async () => {
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
-  // wait 3 sec to make sure page is fully loaded
-  const waitTime = 3000
-  log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
-  await new Promise(resolve => setTimeout(resolve, waitTime))
+  if (input.waitToLoad) {
+    log.info(`Wait for ${input.waitToLoad} ms so that page is fully loaded`)
+    await new Promise(resolve => setTimeout(resolve, input.waitToLoad))
+  }
 
   // click cookie pop-up away
   if (input.cookieAcceptSelector) {
@@ -62,26 +62,26 @@ Apify.main(async () => {
   // start scrolling down and take screenshots
   await scrollDownProcess(page, gif, input)
   browser.close()
-  
+
   gif.finish()
   const gifBuffer = await getGifBuffer(gif, chunks)
 
   const siteName = input.url.match(/(\w+\.)?[\w-]+\.\w+/g)
   const baseFileName = `${siteName}-scroll`
-  
+
   try {
     const orignialGifSaved = saveGif(`${baseFileName}_original.gif`, gifBuffer)
-    
+
     const lossyBuffer = await lossyCompression(gifBuffer)
     log.info('Lossy compression finished')
-    
+
     const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp.gif`, lossyBuffer)
 
     await Promise.all([
       orignialGifSaved,
       lossyGifSaved
     ])
-  } catch (error){
+  } catch (error) {
     log.error(error)
   }
 
