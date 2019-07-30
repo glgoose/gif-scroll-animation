@@ -88,12 +88,12 @@
             "editor": "checkbox",
             "default": true,
             "groupCaption": "Compression",
-            "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved.\nMore info: https://www.lcdf.org/gifsicle/"
+            "groupDescription": "Compression of the GIF file to a smaller size.\nWill output a file for each method selected and the original gif will also always be saved."
         },
         "loslessCompression": {
             "title": "Losless",
             "type": "boolean",
-            "description": "Losless compression of GIF using the Gifsicle library.",
+            "description": "Losless compression of GIF using the Gifsicle library.\nMore info: https://www.lcdf.org/gifsicle/",
             "editor": "checkbox",
             "default": false
         }
