@@ -76,6 +76,7 @@
             "type": "string",
             "description": "CSS selector for the cookie pop-up that will be used to click it away.\nMore info on CSS selectors here: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors",
             "editor": "textfield",
+            "prefill": ".cookieConsent",
             "example": ".cookieConsent"
         },
         "slowDownAnimations": {
@@ -88,11 +89,11 @@
         "compression.lossy": {
             "title": "Lossy",
             "type": "boolean",
-            "description": "Lossy compression of GIF using the Giflossy library (part of Gifsicle now).",
+            "description": "Lossy LZW compression of GIF using the Giflossy library (part of Gifsicle now).\nMore info: https://kornel.ski/lossygif",
             "editor": "checkbox",
             "default": true,
             "groupCaption": "Compression",
-            "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved."
+            "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved.\nMore info: https://www.lcdf.org/gifsicle/"
         },
         "compression.losless": {
             "title": "Losless",
