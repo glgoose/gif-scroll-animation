@@ -41,7 +41,7 @@ Apify.main(async () => {
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
-  const waitTime = input.waitToLoadPage * 1000  \\convert from seconds to milliseconds
+  const waitTime = input.waitToLoadPage * 1000  //convert from seconds to milliseconds
   if (waitTime) {
     log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
     await new Promise(resolve => setTimeout(resolve, waitTime))
@@ -79,7 +79,7 @@ Apify.main(async () => {
       log.info('Lossy compression finished')
       const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp`, lossyBuffer)
     }
-    
+
     if (input.compression.losless) {
       const loslessBuffer = await compressGif(gifBuffer, 'losless')
       log.info('Losless compression finished')
