@@ -41,8 +41,8 @@ const getScrollParameters = async (page, input) => {
     const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)  // initially used body element height via .boundingbox() but this is not always equal to document height
     const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
 
-    const initialPosition = input.viewport.height + scrollTop
-    const scrollByAmount = Math.round(input.viewport.height * input.scrollPercentage / 100)
+    const initialPosition = input.viewportHeight + scrollTop
+    const scrollByAmount = Math.round(input.viewportHeight * input.scrollPercentage / 100)
 
     return {
         pageHeight,

@@ -20,10 +20,10 @@ Apify.main(async () => {
   })
   const page = await browser.newPage()
 
-  log.info(`Setting page viewport to ${input.viewport.width}x${input.viewport.height}`)
+  log.info(`Setting page viewport to ${input.viewportWidth}x${input.viewportHeight}`)
   await page.setViewport({
-    width: input.viewport.width,
-    height: input.viewport.height
+    width: input.viewportWidth,
+    height: input.viewportHeight
   })
 
   if (input.slowDownAnimations) {
@@ -35,7 +35,7 @@ Apify.main(async () => {
 
   // set up gif encoder
   let chunks = []
-  let gif = new GifEncoder(input.viewport.width, input.viewport.height)
+  let gif = new GifEncoder(input.viewportWidth, input.viewportHeight)
 
   gif.setFrameRate(input.frameRate)
   gif.on('data', (chunk) => chunks.push(chunk))
@@ -74,13 +74,13 @@ Apify.main(async () => {
   try {
     const orignialGifSaved = await saveGif(`${baseFileName}_original`, gifBuffer)
 
-    if (input.compression.lossy) {
+    if (input.lossyCompression) {
       const lossyBuffer = await compressGif(gifBuffer, 'lossy')
       log.info('Lossy compression finished')
       const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp`, lossyBuffer)
     }
 
-    if (input.compression.losless) {
+    if (input.loslessCompression) {
       const loslessBuffer = await compressGif(gifBuffer, 'losless')
       log.info('Losless compression finished')
       const loslessGifSaved = await saveGif(`${baseFileName}_losless-comp`, loslessBuffer)

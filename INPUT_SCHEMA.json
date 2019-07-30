@@ -31,7 +31,7 @@
             "default": 2,
             "example": 2
         },
-        "viewport.width": {
+        "viewportWidth": {
             "title": "Viewport width",
             "type": "integer",
             "description": "Width of the browser window (viewport)",
@@ -41,7 +41,7 @@
             "default": 1366,
             "example": 1366
         },
-        "viewport.height": {
+        "viewportHeight": {
             "title": "Viewport height",
             "type": "integer",
             "description": "Height of the browser window (viewport)",
@@ -66,7 +66,7 @@
             "type": "integer",
             "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
             "editor": "number",
-            "unit": "%",
+            "unit": "sec",
             "prefill": 0,
             "default": 0,
             "example": 5
@@ -86,7 +86,7 @@
             "editor": "checkbox",
             "default": false
         },
-        "compression.lossy": {
+        "lossyCompression": {
             "title": "Lossy",
             "type": "boolean",
             "description": "Lossy LZW compression of GIF using the Giflossy library (part of Gifsicle now).\nMore info: https://kornel.ski/lossygif",
@@ -95,7 +95,7 @@
             "groupCaption": "Compression",
             "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved.\nMore info: https://www.lcdf.org/gifsicle/"
         },
-        "compression.losless": {
+        "loslessCompression": {
             "title": "Losless",
             "type": "boolean",
             "description": "Losless compression of GIF using the Gifsicle library.",
