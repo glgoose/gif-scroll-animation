@@ -80,14 +80,16 @@
         },
         "slowDownAnimations": {
             "title": "Slow down animations",
-            "type": "string",
+            "type": "boolean",
             "description": "When selected it slows down animations on the page so they can be properly captured.",
+            "editor": "checkbox",
             "default": false
         },
         "compression.lossy": {
             "title": "Lossy",
             "type": "boolean",
             "description": "Lossy compression of GIF using the Giflossy library (part of Gifsicle now).",
+            "editor": "checkbox",
             "default": true,
             "groupCation": "Compression",
             "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved."
@@ -96,6 +98,7 @@
             "title": "Losless",
             "type": "boolean",
             "description": "Losless compression of GIF using the Gifsicle library.",
+            "editor": "checkbox",
             "default": false
         }
     },
