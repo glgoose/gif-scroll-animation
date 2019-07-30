@@ -37,7 +37,6 @@
             "description": "Width of the browser window (viewport)",
             "editor": "number",
             "unit": "px",
-            "prefill": 1366,
             "default": 1366,
             "example": 1366
         },
@@ -47,7 +46,6 @@
             "description": "Height of the browser window (viewport)",
             "editor": "number",
             "unit": "px",
-            "prefill": 768,
             "default": 768,
             "example": 768
         },
@@ -57,7 +55,6 @@
             "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
             "editor": "number",
             "unit": "%",
-            "prefill": 10,
             "default": 10,
             "example": 10
         },
@@ -67,7 +64,6 @@
             "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
             "editor": "number",
             "unit": "sec",
-            "prefill": 0,
             "default": 0,
             "example": 5
         },
@@ -76,7 +72,6 @@
             "type": "string",
             "description": "CSS selector for the cookie pop-up that will be used to click it away.\nMore info on CSS selectors here: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors",
             "editor": "textfield",
-            "prefill": ".cookieConsent",
             "example": ".cookieConsent"
         },
         "slowDownAnimations": {
