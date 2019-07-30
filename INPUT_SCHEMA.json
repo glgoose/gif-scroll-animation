@@ -1,6 +1,7 @@
 {
     "title": "Gif scroll animation actor input",
     "type": "object",
+    "schemaVersion": 1,
     "properties": {
         "url": {
             "title": "Website URL",
