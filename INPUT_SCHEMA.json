@@ -91,7 +91,7 @@
             "description": "Lossy compression of GIF using the Giflossy library (part of Gifsicle now).",
             "editor": "checkbox",
             "default": true,
-            "groupCation": "Compression",
+            "groupCaption": "Compression",
             "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved."
         },
         "compression.losless": {
