@@ -27,9 +27,9 @@
             "description": "Amount of time to capture the screen before doing any action like scrolling down or clicking.",
             "editor": "number",
             "unit": "sec",
-            "prefill": 2,
-            "default": 2,
-            "example": 2
+            "prefill": 1,
+            "default": 1,
+            "example": 1
         },
         "viewportWidth": {
             "title": "Viewport width",
