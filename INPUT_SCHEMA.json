@@ -75,7 +75,7 @@
             "title": "Accept cookie selector",
             "type": "string",
             "description": "CSS selector for the cookie pop-up that will be used to click it away.\nMore info on CSS selectors here: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors",
-            "editor": "textField",
+            "editor": "textfield",
             "example": ".cookieConsent"
         },
         "slowDownAnimations": {
