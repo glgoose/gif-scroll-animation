@@ -9,9 +9,7 @@ const takeScreenshot = async (page, { fullPage = false, omitBackground = false }
     log.info('Taking screenshot')
 
     const screenshotBuffer = await page.screenshot({
-        type: 'png',
-        fullPage,
-        omitBackground
+        type: 'png'
     })
 
     return screenshotBuffer
@@ -44,7 +42,7 @@ const getScrollParameters = async (page, input) => {
     const scrollTop = await page.evaluate(() => document.documentElement.scrollTop)
 
     const initialPosition = input.viewport.height + scrollTop
-    const scrollByAmount = Math.round(input.viewport.height * input.scrollPercentage)
+    const scrollByAmount = Math.round(input.viewport.height * input.scrollPercentage / 100)
 
     return {
         pageHeight,

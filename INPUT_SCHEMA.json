@@ -1,0 +1,104 @@
+{
+    "title": "Gif scroll animation actor input",
+    "type": "object",
+    "properties": {
+        "url": {
+            "title": "Website URL",
+            "type": "string",
+            "description": "Website URL",
+            "editor": "textfield",
+            "prefill": "https://apify.com/",
+            "example": "https://apify.com/"
+        },
+        "frameRate": {
+            "title": "Frame rate",
+            "type": "integer",
+            "description": "Number of frames per second",
+            "editor": "number",
+            "unit": "fps",
+            "prefill": 7,
+            "default": 7,
+            "example": 7
+        },
+        "captureBeforeAction": {
+            "title": "Capture before action",
+            "type": "integer",
+            "description": "Amount of time to capture the screen before doing any action like scrolling down or clicking.",
+            "editor": "number",
+            "unit": "sec",
+            "prefill": 2,
+            "default": 2,
+            "example": 2
+        },
+        "viewport.width": {
+            "title": "Viewport width",
+            "type": "integer",
+            "description": "Width of the browser window (viewport)",
+            "editor": "number",
+            "unit": "px",
+            "prefill": 1366,
+            "default": 1366,
+            "example": 1366
+        },
+        "viewport.height": {
+            "title": "Viewport height",
+            "type": "integer",
+            "description": "Height of the browser window (viewport)",
+            "editor": "number",
+            "unit": "px",
+            "prefill": 768,
+            "default": 768,
+            "example": 768
+        },
+        "scrollPercentage": {
+            "title": "Scroll percentage",
+            "type": "integer",
+            "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
+            "editor": "number",
+            "unit": "%",
+            "prefill": 10,
+            "default": 10,
+            "example": 10
+        },
+        "waitToLoadPage": {
+            "title": "Wait to load",
+            "type": "integer",
+            "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
+            "editor": "number",
+            "unit": "%",
+            "prefill": 0,
+            "default": 0,
+            "example": 5
+        },
+        "acceptCookieSelector": {
+            "title": "Accept cookie selector",
+            "type": "string",
+            "description": "CSS selector for the cookie pop-up that will be used to click it away.\nMore info on CSS selectors here: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors",
+            "editor": "textField",
+            "example": ".cookieConsent"
+        },
+        "slowDownAnimations": {
+            "title": "Slow down animations",
+            "type": "string",
+            "description": "When selected it slows down animations on the page so they can be properly captured.",
+            "default": false
+        },
+        "compression.lossy": {
+            "title": "Lossy",
+            "type": "boolean",
+            "description": "Lossy compression of GIF using the Giflossy library (part of Gifsicle now).",
+            "default": true,
+            "groupCation": "Compression",
+            "groupDescription": "Compression of the GIF file to a smaller size. Will output a file for each method selected and the original gif will also always be saved."
+        },
+        "compression.losless": {
+            "title": "Losless",
+            "type": "boolean",
+            "description": "Losless compression of GIF using the Gifsicle library.",
+            "default": false
+        }
+    },
+    "required": [
+        "url"
+    ]
+}

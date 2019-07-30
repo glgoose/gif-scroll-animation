@@ -41,9 +41,10 @@ Apify.main(async () => {
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
-  if (input.waitToLoad) {
-    log.info(`Wait for ${input.waitToLoad} ms so that page is fully loaded`)
-    await new Promise(resolve => setTimeout(resolve, input.waitToLoad))
+  const waitTime = input.waitToLoadPage * 1000  \\convert from seconds to milliseconds
+  if (waitTime) {
+    log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
+    await new Promise(resolve => setTimeout(resolve, waitTime))
   }
 
   // click cookie pop-up away
@@ -54,7 +55,8 @@ Apify.main(async () => {
   }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
-  for (itt = 0; itt < input.framesBeforeScrolling; itt++) {
+  const framesBeforeAction = input.captureBeforeAction * input.frameRate
+  for (itt = 0; itt < framesBeforeAction; itt++) {
     const screenshotBuffer = await takeScreenshot(page, input)  // take screenshot each time so animations also show well
     await gifAddFrame(screenshotBuffer, gif)
   }
@@ -70,21 +72,19 @@ Apify.main(async () => {
   const baseFileName = `${siteName}-scroll`
 
   try {
-    const orignialGifSaved = saveGif(`${baseFileName}_original`, gifBuffer)
+    const orignialGifSaved = await saveGif(`${baseFileName}_original`, gifBuffer)
 
-    const loslessBuffer = await compressGif(gifBuffer, 'losless')
-    log.info('Losless compression finished')
-    const loslessGifSaved = await saveGif(`${baseFileName}_losless-comp`, loslessBuffer)
-
-    const lossyBuffer = await compressGif(gifBuffer, 'lossy')
-    log.info('Lossy compression finished')
-    const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp`, lossyBuffer)
-
-    await Promise.all([
-      orignialGifSaved,
-      loslessGifSaved,
-      lossyGifSaved
-    ])
+    if (input.compression.lossy) {
+      const lossyBuffer = await compressGif(gifBuffer, 'lossy')
+      log.info('Lossy compression finished')
+      const lossyGifSaved = await saveGif(`${baseFileName}_lossy-comp`, lossyBuffer)
+    }
+    
+    if (input.compression.losless) {
+      const loslessBuffer = await compressGif(gifBuffer, 'losless')
+      log.info('Losless compression finished')
+      const loslessGifSaved = await saveGif(`${baseFileName}_losless-comp`, loslessBuffer)
+    }
   } catch (error) {
     log.error(error)
   }
