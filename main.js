@@ -20,7 +20,7 @@ Apify.main(async () => {
   const input = await Apify.getInput()
 
   const browser = await Apify.launchPuppeteer({
-    useChrome: false
+    useChrome: true
   })
   const page = await browser.newPage()
 
