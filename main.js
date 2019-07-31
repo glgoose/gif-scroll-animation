@@ -42,7 +42,7 @@ Apify.main(async () => {
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
-  const waitTime = input.waitToLoadPage * 1000  //convert from seconds to milliseconds
+  const waitTime = input.waitToLoadPage  //convert from seconds to milliseconds
   if (waitTime) {
     log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
     await new Promise(resolve => setTimeout(resolve, waitTime))
@@ -60,7 +60,7 @@ Apify.main(async () => {
   }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
-  const framesBeforeAction = input.captureBeforeAction * input.frameRate
+  const framesBeforeAction = (input.captureBeforeAction / 1000) * input.frameRate
   for (itt = 0; itt < framesBeforeAction; itt++) {
     const screenshotBuffer = await takeScreenshot(page, input)  // take screenshot each time so animations also show well
     await gifAddFrame(screenshotBuffer, gif)
