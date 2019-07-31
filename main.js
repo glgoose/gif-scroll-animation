@@ -50,8 +50,12 @@ Apify.main(async () => {
   // click cookie pop-up away
   if (input.acceptCookieSelector) {
     log.info('Clicking cookie pop-up away')
-    await page.waitForSelector(input.acceptCookieSelector)
-    await page.click(input.acceptCookieSelector)
+    try {
+      await page.waitForSelector(input.acceptCookieSelector)
+      await page.click(input.acceptCookieSelector)
+    } catch (err) {
+      log.error('CSS selector to accept cookies is likely incorrect')
+    }
   }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
