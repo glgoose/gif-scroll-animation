@@ -9,7 +9,7 @@ const {
   compressGif,
   saveGif,
   slowDownAnimations
-} = require('./helper')
+} = require('./src/helper')
 
 
 Apify.main(async () => {
