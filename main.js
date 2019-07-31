@@ -12,7 +12,7 @@ const {
 } = require('./src/helper')
 
 const wait = async (time) => {
-  await new Promise(resolve => setTimeout(resolve, waitTime))
+  await new Promise(resolve => setTimeout(resolve, time))
 }
 
 Apify.main(async () => {
