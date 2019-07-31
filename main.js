@@ -11,6 +11,9 @@ const {
   slowDownAnimations
 } = require('./src/helper')
 
+const wait = async (time) => {
+  await new Promise(resolve => setTimeout(resolve, waitTime))
+}
 
 Apify.main(async () => {
   const input = await Apify.getInput()
@@ -45,7 +48,7 @@ Apify.main(async () => {
   const waitTime = input.waitToLoadPage  //convert from seconds to milliseconds
   if (waitTime) {
     log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
-    await new Promise(resolve => setTimeout(resolve, waitTime))
+    wait(waitTime)
   }
 
   // click cookie pop-up away
@@ -54,6 +57,8 @@ Apify.main(async () => {
     try {
       await page.waitForSelector(input.acceptCookieSelector)
       await page.click(input.acceptCookieSelector)
+
+      wait(1000) //wait some extra time so that pop-up is fully away
     } catch (err) {
       log.error('CSS selector to accept cookies is likely incorrect')
     }
