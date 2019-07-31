@@ -12,7 +12,8 @@ const {
 } = require('./src/helper')
 
 const wait = async (time) => {
-  await new Promise(resolve => setTimeout(resolve, time))
+  log.info(`Wait for ${time} ms`)
+  return new Promise(resolve => setTimeout(resolve, time))
 }
 
 Apify.main(async () => {
@@ -47,8 +48,7 @@ Apify.main(async () => {
 
   const waitTime = input.waitToLoadPage  //convert from seconds to milliseconds
   if (waitTime) {
-    log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
-    wait(waitTime)
+    await wait(waitTime)
   }
 
   // click cookie pop-up away
@@ -58,7 +58,7 @@ Apify.main(async () => {
       await page.waitForSelector(input.acceptCookieSelector)
       await page.click(input.acceptCookieSelector)
 
-      wait(1000) //wait some extra time so that pop-up is fully away
+      await wait(1000) //wait some extra time so that pop-up is fully away
     } catch (err) {
       log.error('CSS selector to accept cookies is likely incorrect')
     }
