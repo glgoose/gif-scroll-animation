@@ -1,7 +1,6 @@
 # Actor - Gif scroll animation
 
 ## Description
-
 This actor is good for:  
 * capturing scroll animations     
 * visually checking the clicking of elements  
@@ -14,7 +13,6 @@ Or when you want to visually check a lot of pages to see how they behave for UX 
 
 ## How it works
 The actor goes to the URL of the specified page and takes screenshots. Those screenshots serve as frames which are made into a gif.
-
 
 ## Output
 ### Example
@@ -29,7 +27,7 @@ The original gif will always be saved and depending on the compression method(s)
 ## Input parameters
 | Field    | Type   | Required | Default | Description |
 | -------- | ------ | -------- | ------- | ----------- |
-| url      | string | Yes |  | Website URL |
+| url      | string | Yes      |         | Website URL |
 | frameRate | integer | No | 7 | Number of frames per second (fps) |
 | capatureBeforeAction | integer | No | 1 | Amount of time to capture the screen before doing any action like scrolling down or clicking. (sec) |  
 | viewportWidth | integer | No | 1366 | Inner width of browser window (pixels) |  
@@ -50,8 +48,6 @@ The original gif will always be saved and depending on the compression method(s)
   "acceptCookieSelector": ".inner-cookie .button"
 }
 ```
-
-
 
 ## Future development
 * use screen recording instead of screenshots
