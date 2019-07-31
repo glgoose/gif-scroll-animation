@@ -14,7 +14,7 @@
         "frameRate": {
             "title": "Frame rate",
             "type": "integer",
-            "description": "Number of frames per second",
+            "description": "Number of frames per second (fps)",
             "editor": "number",
             "unit": "fps",
             "prefill": 7,
