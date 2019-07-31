@@ -84,7 +84,7 @@
         "lossyCompression": {
             "title": "Lossy",
             "type": "boolean",
-            "description": "Lossy LZW compression of GIF using the <a href=\"https://kornel.ski/lossygif/\" target=\"_blank\">Giflossy library</a> (part of Gifsicle now).",
+            "description": "Lossy LZW compression of GIF using <a href=\"https://kornel.ski/lossygif/\" target=\"_blank\">Giflossy</a> (part of Gifsicle now).",
             "editor": "checkbox",
             "default": true,
             "groupCaption": "Compression",
@@ -93,7 +93,7 @@
         "loslessCompression": {
             "title": "Losless",
             "type": "boolean",
-            "description": "Losless compression of GIF using the <a href=\"https://www.lcdf.org/gifsicle/\" target=\"_blank\">Gifsicle library.</a>",
+            "description": "Losless compression of GIF using <a href=\"https://www.lcdf.org/gifsicle/\" target=\"_blank\">Gifsicle.</a>",
             "editor": "checkbox",
             "default": false
         }
