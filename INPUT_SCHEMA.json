@@ -34,7 +34,7 @@
         "viewportWidth": {
             "title": "Viewport width",
             "type": "integer",
-            "description": "Width of the browser window (viewport)",
+            "description": "Inner browser window width",
             "editor": "number",
             "unit": "px",
             "default": 1366,
@@ -43,7 +43,7 @@
         "viewportHeight": {
             "title": "Viewport height",
             "type": "integer",
-            "description": "Height of the browser window (viewport)",
+            "description": "Inner browser window height",
             "editor": "number",
             "unit": "px",
             "default": 768,
@@ -52,7 +52,7 @@
         "scrollPercentage": {
             "title": "Scroll percentage",
             "type": "integer",
-            "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
+            "description": "Amount to scroll down determined as a percentage of the vierport height.\n\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of viewport height: 1000 px = 100 px",
             "editor": "number",
             "unit": "%",
             "default": 10,
@@ -61,7 +61,7 @@
         "waitToLoadPage": {
             "title": "Wait to load",
             "type": "integer",
-            "description": "Amount to scroll down determined as a percentage of the vierport height.\nFor example, if viewport height is 1000 pixels and scroll percentage is set to 10%.\nThen scroll down by 10% of 1000 px = 100 px",
+            "description": "Set time to wait in the beginning so that page is fully loaded.\nFor example when there is loading bar in the beginning that you don't want in the recording.",
             "editor": "number",
             "unit": "sec",
             "default": 0,
@@ -70,7 +70,7 @@
         "acceptCookieSelector": {
             "title": "Accept cookie selector",
             "type": "string",
-            "description": "CSS selector for the cookie pop-up that will be used to click it away.\nMore info on CSS selectors here: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors",
+            "description": "CSS selector for the cookie pop-up that will be used to click it away.\n\nFor more info on CSS selectors <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors\" target=\"_blank\">click here</a>",
             "editor": "textfield",
             "example": ".cookieConsent button"
         },
@@ -84,16 +84,16 @@
         "lossyCompression": {
             "title": "Lossy",
             "type": "boolean",
-            "description": "Lossy LZW compression of GIF using the Giflossy library (part of Gifsicle now).\nMore info: https://kornel.ski/lossygif",
+            "description": "Lossy LZW compression of GIF using the <a href=\"https://kornel.ski/lossygif/\" target=\"_blank\">Giflossy library</a> (part of Gifsicle now).",
             "editor": "checkbox",
             "default": true,
             "groupCaption": "Compression",
-            "groupDescription": "Compression of the GIF file to a smaller size.\nWill output a file for each method selected and the original gif will also always be saved."
+            "groupDescription": "Compression of the GIF file to a smaller size.\n\nWill output a file for each method selected and the original gif will also always be saved."
         },
         "loslessCompression": {
             "title": "Losless",
             "type": "boolean",
-            "description": "Losless compression of GIF using the Gifsicle library.\nMore info: https://www.lcdf.org/gifsicle/",
+            "description": "Losless compression of GIF using the <a href=\"https://www.lcdf.org/gifsicle/\" target=\"_blank\">Gifsicle library.</a>",
             "editor": "checkbox",
             "default": false
         }
