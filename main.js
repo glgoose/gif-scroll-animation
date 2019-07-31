@@ -38,6 +38,7 @@ Apify.main(async () => {
   let gif = new GifEncoder(input.viewportWidth, input.viewportHeight)
 
   gif.setFrameRate(input.frameRate)
+  gif.setRepeat(0)  //loop indefinitely
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
 
