@@ -34,7 +34,7 @@
         "viewportWidth": {
             "title": "Viewport width",
             "type": "integer",
-            "description": "Inner browser window width",
+            "description": "Inner width of browser window",
             "editor": "number",
             "unit": "px",
             "default": 1366,
@@ -43,7 +43,7 @@
         "viewportHeight": {
             "title": "Viewport height",
             "type": "integer",
-            "description": "Inner browser window height",
+            "description": "Inner height browser window",
             "editor": "number",
             "unit": "px",
             "default": 768,
