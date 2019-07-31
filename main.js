@@ -12,6 +12,7 @@ const {
 } = require('./src/helper')
 
 const wait = async (time) => {
+  log.info(`Wait for ${time} ms`)
   await new Promise(resolve => setTimeout(resolve, time))
 }
 
@@ -47,7 +48,6 @@ Apify.main(async () => {
 
   const waitTime = input.waitToLoadPage  //convert from seconds to milliseconds
   if (waitTime) {
-    log.info(`Wait for ${waitTime} ms so that page is fully loaded`)
     wait(waitTime)
   }
 
