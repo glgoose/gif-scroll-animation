@@ -13,7 +13,11 @@ const {
 
 const wait = async (time) => {
   log.info(`Wait for ${time} ms`)
+<<<<<<< HEAD
   return new Promise(resolve => setTimeout(resolve, time))
+=======
+  await new Promise(resolve => setTimeout(resolve, time))
+>>>>>>> origin/master
 }
 
 Apify.main(async () => {
