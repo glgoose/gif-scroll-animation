@@ -56,7 +56,9 @@ Apify.main(async () => {
     log.info('Clicking cookie pop-up away')
     try {
       await page.waitForSelector(input.acceptCookieSelector)
-      await page.click(input.acceptCookieSelector)
+      await page.click(input.acceptCookieSelector, {
+        delay: 200
+      })
 
       await wait(1000) //wait some extra time so that pop-up is fully away
     } catch (err) {
