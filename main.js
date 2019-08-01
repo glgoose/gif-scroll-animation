@@ -19,9 +19,7 @@ const wait = async (time) => {
 Apify.main(async () => {
   const input = await Apify.getInput()
 
-  const browser = await Apify.launchPuppeteer({
-    useChrome: true
-  })
+  const browser = await Apify.launchPuppeteer({})
   const page = await browser.newPage()
 
   log.info(`Setting page viewport to ${input.viewportWidth}x${input.viewportHeight}`)
@@ -37,7 +35,23 @@ Apify.main(async () => {
   log.info(`Opening page: ${input.url}`)
   await page.goto(input.url, { waitUntil: 'networkidle2' })
 
-  // set up gif encoder
+  if (input.waitToLoadPage) {
+    await wait(input.waitToLoadPage)
+  }
+
+  // remove cookie window if specified
+  if (input.cookieWindowSelector) {
+    try {
+      await page.waitForSelector(input.cookieWindowSelector)
+
+      log.info('Removing cookie pop-up window')
+      await page.$eval(input.cookieWindowSelector, el => el.remove())
+    } catch (err) {
+      log.info('Selector for cookie pop-up window is likely incorrect')
+    }
+  }
+
+  // set-up gif encoder
   let chunks = []
   let gif = new GifEncoder(input.viewportWidth, input.viewportHeight)
 
@@ -45,26 +59,6 @@ Apify.main(async () => {
   gif.setRepeat(0)  //loop indefinitely
   gif.on('data', (chunk) => chunks.push(chunk))
   gif.writeHeader()
-
-  const waitTime = input.waitToLoadPage  //convert from seconds to milliseconds
-  if (waitTime) {
-    await wait(waitTime)
-  }
-
-  // click cookie pop-up away
-  if (input.acceptCookieSelector) {
-    log.info('Clicking cookie pop-up away')
-    try {
-      await page.waitForSelector(input.acceptCookieSelector)
-      await page.click(input.acceptCookieSelector, {
-        delay: 79
-      })
-
-      await wait(1000) //wait some extra time so that pop-up is fully away
-    } catch (err) {
-      log.error('CSS selector to accept cookies is likely incorrect')
-    }
-  }
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
   const framesBeforeAction = (input.captureBeforeAction / 1000) * input.frameRate
@@ -74,7 +68,10 @@ Apify.main(async () => {
   }
 
   // start scrolling down and take screenshots
-  await scrollDownProcess(page, gif, input)
+  if (input.scrollDown) {
+    await scrollDownProcess(page, gif, input)
+  }
+
   browser.close()
 
   gif.finish()

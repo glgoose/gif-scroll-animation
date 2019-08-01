@@ -67,10 +67,10 @@
             "default": 0,
             "example": 5000
         },
-        "acceptCookieSelector": {
-            "title": "Accept cookie selector",
+        "cookieWindowSelector": {
+            "title": "Cookie window selector",
             "type": "string",
-            "description": "CSS selector for the cookie pop-up that will be used to click it away.\n\nFor more info on CSS selectors <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors\" target=\"_blank\">click here</a>",
+            "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors\" target=\"_blank\">CSS selector</a> for the cookie pop-up window that will be used to remove the element from the DOM.",
             "editor": "textfield",
             "example": ".cookieConsent button"
         },

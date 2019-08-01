@@ -34,7 +34,7 @@ The original gif will always be saved and depending on the compression method(s)
 | viewportHeight | integer | No | 768 | Inner height of browser window (pixels) |
 | scrollPercentage | integer | No | 10 | Amount to scroll down determined as a percentage of the vierport height. (%) |
 | waitToLoadPage | integer | No | 0 | Set time to wait in the beginning so that page is fully loaded. (ms) |  
-| acceptCookieSelector | string | No | | CSS selector to click away cookie pop-up if one is present. |
+| cookieWindowSelector | string | No | | CSS selector to remove cookie pop-up window if one is present. |
 | slowDownAnimations | boolean | No | false |When selected it slows down animations on the page so they can be properly captured. |
 | lossyCompression | boolean | No | true |Lossy LZW compression of GIF using Giflossy. |
 | loslessCompression | boolean | No | false | Losless compression of GIF using Gifsicle. |
