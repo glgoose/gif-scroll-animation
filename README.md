@@ -18,7 +18,7 @@ The actor goes to the URL of the specified page and takes screenshots. Those scr
 ### Example
 Gif for scrolling down www.franshalsmuseum.nl:  
 
-![Frans Hals Museam gif](./src/gif-examples/www.franshalsmuseum.nl-scroll_lossless-comp.gif)
+![Frans Hals Museam gif](./src/gif-examples/www.franshalsmuseum.nl-scroll_lossy-comp.gif)
 
 ### Storage
 The gif files are stored in the key-value store.  
