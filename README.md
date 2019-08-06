@@ -28,10 +28,12 @@ The original gif will always be saved and depending on the compression method(s)
 | Field    | Type   | Required | Default | Description |
 | -------- | ------ | -------- | ------- | ----------- |
 | url      | string | Yes      |         | Website URL |
+| frameRate | integer | No | 7 | Number of frames per second (fps) |
 | scrollDown | boolean | Yes |  | When true, the actor will scroll down the page and capture it to create the gif. |
 | scrollPercentage | integer | No | 10 | Amount to scroll down determined as a percentage of the vierport height. (%) |
-| frameRate | integer | No | 7 | Number of frames per second (fps) |
-| capatureBeforeAction | integer | No | 1 | Amount of time to capture the screen before doing any action like scrolling down or clicking. (ms) |  
+| recordingTimeBeforeAction | integer | No | 1 | Amount of time to capture the screen before doing any action like scrolling down or clicking. (ms) | 
+| clickSelector | integer | No |  | Used to click an element and record it. |
+| recordingTimeAfterClick | integer | No | Amount of time to record the screen after clicking an element with the click selector. | 
 | waitToLoadPage | integer | No | 0 | Set time to wait in the beginning so that page is fully loaded. (ms) |  
 | cookieWindowSelector | string | No | | CSS selector to remove cookie pop-up window if one is present. |
 | slowDownAnimations | boolean | No | false |When selected it slows down animations on the page so they can be properly captured. |

@@ -2,8 +2,7 @@ const Apify = require('apify')
 const { log } = Apify.utils
 const GifEncoder = require('gif-encoder')
 const {
-  takeScreenshot,
-  gifAddFrame,
+  record,
   scrollDownProcess,
   getGifBuffer,
   compressGif,
@@ -61,15 +60,25 @@ Apify.main(async () => {
   gif.writeHeader()
 
   // add first frame multiple times so there is some delay before gif starts visually scrolling
-  const framesBeforeAction = (input.captureBeforeAction / 1000) * input.frameRate
-  for (itt = 0; itt < framesBeforeAction; itt++) {
-    const screenshotBuffer = await takeScreenshot(page, input)  // take screenshot each time so animations also show well
-    await gifAddFrame(screenshotBuffer, gif)
-  }
+  await record(page, gif, input.recordingTimeBeforeAction, input.frameRate)
 
   // start scrolling down and take screenshots
   if (input.scrollDown) {
     await scrollDownProcess(page, gif, input)
+  }
+
+  // click element and record the action
+  if (input.clickSelector) {
+    try {
+      await page.waitForSelector(input.clickSelector)
+      log.info(`Clicking element with selector ${input.clickSelector}`)
+      await page.click(input.clickSelector)
+    }
+    catch (err) {
+      log.info('Click selector is likely incorrect')
+    }
+
+    await record(page, gif, input.recordingTimeAfterClick, input.frameRate)
   }
 
   browser.close()

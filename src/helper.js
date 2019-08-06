@@ -5,7 +5,7 @@ const imagemin = require('imagemin');
 const imageminGiflossy = require('imagemin-giflossy')
 const imageminGifsicle = require('imagemin-gifsicle')
 
-const takeScreenshot = async (page, { fullPage = false, omitBackground = false }) => {
+const takeScreenshot = async (page) => {
     log.info('Taking screenshot')
 
     const screenshotBuffer = await page.screenshot({
@@ -36,6 +36,15 @@ const gifAddFrame = async (screenshotBuffer, gif) => {
     gif.addFrame(pixels)
 }
 
+const record = async (page, gif, recordingTime, frameRate) => {
+    const frames = (recordingTime / 1000) * frameRate
+
+    for (itt = 0; itt < frames; itt++) {
+        const screenshotBuffer = await takeScreenshot(page)
+        await gifAddFrame(screenshotBuffer, gif)
+    }
+}
+
 const getScrollParameters = async (page, input) => {
     // get page height to determine when we scrolled to the bottom
     const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight)  // initially used body element height via .boundingbox() but this is not always equal to document height
@@ -56,7 +65,7 @@ const scrollDownProcess = async (page, gif, input) => {
     let scrolledUntil = initialPosition
 
     while (pageHeight > scrolledUntil) {
-        const screenshotBuffer = await takeScreenshot(page, input)
+        const screenshotBuffer = await takeScreenshot(page)
 
         gifAddFrame(screenshotBuffer, gif)
 
@@ -125,8 +134,7 @@ const slowDownAnimations = async (page) => {
 }
 
 module.exports = {
-    takeScreenshot,
-    gifAddFrame,
+    record,
     scrollDownProcess,
     getGifBuffer,
     compressGif,

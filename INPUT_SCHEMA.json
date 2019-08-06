@@ -11,6 +11,16 @@
             "prefill": "https://apify.com/",
             "example": "https://apify.com/"
         },
+        "frameRate": {
+            "title": "Frame rate",
+            "type": "integer",
+            "description": "Number of frames per second (fps)",
+            "editor": "number",
+            "unit": "fps",
+            "prefill": 7,
+            "default": 7,
+            "example": 7
+        },
         "scrollDown": {
             "title": "Scroll down",
             "type": "boolean",
@@ -26,17 +36,7 @@
             "default": 10,
             "example": 10
         },
-        "frameRate": {
-            "title": "Frame rate",
-            "type": "integer",
-            "description": "Number of frames per second (fps)",
-            "editor": "number",
-            "unit": "fps",
-            "prefill": 7,
-            "default": 7,
-            "example": 7
-        },
-        "captureBeforeAction": {
+        "recordingTimeBeforeAction": {
             "title": "Capture before action",
             "type": "integer",
             "description": "Amount of time to capture the screen before doing any action like scrolling down or clicking.",
@@ -45,6 +45,19 @@
             "prefill": 1500,
             "default": 1500,
             "example": 1500
+        },
+        "clickSelector": {
+            "title": "Click selector",
+            "type": "string",
+            "description": "Used to click an element and record it.",
+            "editor": "textfield"
+        },
+        "recordingTimeAfterClick": {
+            "title": "Time to record after click",
+            "type": "integer",
+            "description": "Amount of time to record the screen after clicking an element with the click selector.",
+            "editor": "number",
+            "unit": "ms"
         },
         "waitToLoadPage": {
             "title": "Wait to load",
