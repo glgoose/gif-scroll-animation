@@ -46,9 +46,10 @@ The original gif will always be saved and depending on the compression method(s)
 ```json
 {
   "url": "https://www.franshalsmuseum.nl/en/",
-  "frameRate": 7,
-  "captureBeforeAction": 1,
-  "acceptCookieSelector": ".inner-cookie .accept"
+    "frameRate": 7,
+    "scrollDown": true,
+    "recordingTimeBeforeAction": 1500,
+    "cookieWindowSelector": ".cookiebar"
 }
 ```
 
