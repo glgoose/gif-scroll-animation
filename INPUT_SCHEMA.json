@@ -25,6 +25,7 @@
             "title": "Scroll down",
             "type": "boolean",
             "description": "When selected the actor will scroll down the page and capture it to create the gif.",
+            "default": false,
             "example": true
         },
         "scrollPercentage": {
@@ -118,7 +119,6 @@
         }
     },
     "required": [
-        "url",
-        "scrollDown"
+        "url"
     ]
 }
